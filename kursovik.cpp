@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <stdio.h>
 
 
@@ -6,7 +6,33 @@ class BaseString
 {
 public:
 	char content[100];
-	int length = sizeof(content) / sizeof(content[0]);
+	int length;
+
+	void StringCopy(char* dest, const char* source)
+	{
+		int i = 0;
+		while (1)
+		{
+			dest[i] = source[i];
+
+			if (dest[i] == '\0')
+			{
+				break;
+			}
+
+			i++;
+		}
+	}
+
+	int StringLength(char str[])
+	{
+		int length = 0;
+		while (str[length] != '\0')
+		{
+			length++;
+		}
+		return length;
+	}
 
 	void AddToStart(char c)
 	{
@@ -19,23 +45,19 @@ public:
 
 	}
 
-	void AddToEnd(char c)
+	BaseString* AddToEnd(char arr[], char c)
 	{
-		int i = 0;
-		while (content[i] != '\0')
-		{
+		size_t i = 0;
+		while (arr[i] != '\0')
 			i++;
-			if (content[i] == '\0')
-			{
-				content[i] = c;
-				content[i + 1] = '\0';
-			}
-		}
+		arr[i] = c;
+		arr[i] = '\0';
+		return new BaseString(content, i);
 	}
 
 	void ShowString()
 	{
-		std::cout << content << std::endl;
+		printf("%s", content);
 	}
 
 	BaseString(char arr[])
@@ -44,6 +66,16 @@ public:
 		{
 			content[i] = arr[i];
 		}
+		length = StringLength(arr);
+	}
+
+	BaseString(char arr[], int size)
+	{
+		for (int i = 0; i < length; i++)
+		{
+			content[i] = arr[i];
+		}
+		length = size;
 	}
 
 };
@@ -59,8 +91,7 @@ int main()
 
 	char c = 'h';
 
-	based.AddToStart(c);
+	based.AddToEnd(content, c);
 	printf("Output:\n");
 	based.ShowString();
 }
-
