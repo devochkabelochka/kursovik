@@ -1,36 +1,94 @@
-﻿#include <iostream>
+#include <iostream>
 #include <stdio.h>
 
 
 class BaseString
 {
 public:
-	char content[100];
-	int length = sizeof(content) / sizeof(content[0]);
+	char* content;
+	unsigned int length;
 
-	void AddToStart(char c)
+	BaseString(char* arr)
 	{
-		for (int i = length - 2; i >= 0; i--)
-		{
-			content[i + 1] = content[i];
-		}
-
-		content[0] = c;
-
+		content = arr;
+		length = GetSize(arr);
 	}
 
-	void AddToEnd(char c)
+	BaseString(char* arr, int size)
 	{
-		int i = 0;
-		while (content[i] != '\0')
+		content = arr;
+		length = size;
+	}
+
+	int GetSize(char* str) 
+	{
+		int result = 0;
+		while (str[result] != '\0')
 		{
-			i++;
-			if (content[i] == '\0')
-			{
-				content[i] = c;
-				content[i + 1] = '\0';
-			}
+			result++;
 		}
+		return result;
+	}
+
+	char* StringCopy(char* dest, const char* src)
+	{
+		if (dest == NULL) 
+		{
+			return NULL;
+		}
+
+		char* ptr = dest;
+
+		while (*src != '\0')
+		{
+			*dest = *src;
+			dest++;
+			src++;
+		}
+
+		*dest = '\0';
+
+		return ptr;
+	}
+
+	BaseString* AddToEnd(char* c)
+	{
+		return AddToEnd(new BaseString(c));
+	}
+
+	BaseString* AddToEnd(BaseString* c)
+	{
+		int totalSize = this->length + c->length;
+		char* buffer = new char[totalSize];
+
+		buffer = StringCopy(buffer, content);
+
+		for (int j = 0; j < c->length - 1; j++)
+		{
+			buffer[this->length + j] = c->content[j];
+		}
+
+		return new BaseString(buffer, totalSize);
+	}
+
+	BaseString* AddToStart(char* c)
+	{
+		return AddToStart(new BaseString(c));
+	}
+
+	BaseString* AddToStart(BaseString* c)
+	{
+		int totalSize = this->length + c->length;
+		char* buffer = new char[totalSize];
+
+		for (int i = 0; i < c->length; i++)
+		{
+			buffer[this->length + i] = c->content[i];
+		}
+
+		buffer = StringCopy(buffer, content);
+
+		return new BaseString(buffer, totalSize);
 	}
 
 	void ShowString()
@@ -38,29 +96,15 @@ public:
 		std::cout << content << std::endl;
 	}
 
-	BaseString(char arr[])
-	{
-		for (int i = 0; i < length; i++)
-		{
-			content[i] = arr[i];
-		}
-	}
-
 };
 
 int main()
 {
-	char content[100];
+	BaseString* balls = new BaseString((char*)"content");
 
-	printf("Input:\n");
-	scanf_s("%s", &content, (unsigned)_countof(content));
+	balls->AddToEnd((char*)"dlc");
+	balls->ShowString();
 
-	BaseString based{ content };
-
-	char c = 'h';
-
-	based.AddToStart(c);
-	printf("Output:\n");
-	based.ShowString();
+	return 0;
 }
 
