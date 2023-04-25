@@ -1,66 +1,92 @@
-﻿#include <iostream>
-#include <stdio.h>
 
+
+#include "stdafx.h"
+#include <iostream>
+using namespace std;
 
 class BaseString
 {
-public:
+protected:
 	char content[100];
-	int length = sizeof(content) / sizeof(content[0]);
+	int length;
+
+public:
+	BaseString(char arr[])
+	{
+		int i = 0;
+		while (arr[i] != '\0')
+		{
+			content[i] = arr[i];
+			i++;
+		}
+		content[i] = '\0';
+		length = i;
+		
+	}
+
+	BaseString(char c)
+	{
+		content[0] = c;
+		content[1] = '\0';
+		length = 1;
+	}
+
+	BaseString()
+	{
+		content[0] = '\0';
+		length = 0;
+	}
 
 	void AddToStart(char c)
 	{
-		for (int i = length - 2; i >= 0; i--)
+		for (int i = length; i >= 0; --i)
 		{
 			content[i + 1] = content[i];
 		}
-
 		content[0] = c;
-
+		length++;
 	}
 
 	void AddToEnd(char c)
 	{
-		int i = 0;
-		while (content[i] != '\0')
-		{
-			i++;
-			if (content[i] == '\0')
-			{
-				content[i] = c;
-				content[i + 1] = '\0';
-			}
-		}
+		content [length] = c;
+		content[++length] = '\0';
 	}
 
 	void ShowString()
 	{
-		std::cout << content << std::endl;
-	}
-
-	BaseString(char arr[])
-	{
-		for (int i = 0; i < length; i++)
-		{
-			content[i] = arr[i];
-		}
+		cout << "content: " << content << ", length: " << length << endl;
 	}
 
 };
 
 int main()
 {
-	char content[100];
+	char Content[100], CC='*', AA='x';
 
-	printf("Input:\n");
-	scanf_s("%s", &content, (unsigned)_countof(content));
+	cout<<"Input:"<<endl;
+	cin >> Content;
+	BaseString first(Content);
+	first.ShowString();
+	first.AddToStart('!');
+	first.ShowString();
+	BaseString second(CC);
+	second.ShowString();
+	second.AddToStart(CC);
+	second.ShowString();
+	BaseString third;
+	third.ShowString();
+	third.AddToStart(AA);
+	third.ShowString();
+
+	/*scanf("%s", &content);
 
 	BaseString based{ content };
 
-	char c = 'h';
+	char c;
+	scanf("%s", &c);
 
-	based.AddToStart(c);
+	based.AddToEnd(content, c);
 	printf("Output:\n");
-	based.ShowString();
+	based.ShowString();*/
 }
-
