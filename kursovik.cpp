@@ -1,7 +1,6 @@
 #include <iostream>
-using namespace std;
 
-//TODO: Fix menu, add more functions
+using namespace std;
 
 class Base
 {
@@ -33,6 +32,18 @@ public:
 	{
 		content[0] = '\0';
 		length = 0;
+	}
+
+	void FillString(char arr[])
+	{
+		int i = 0;
+		while (arr[i] != '\0')
+		{
+			content[i] = arr[i];
+			i++;
+		}
+		content[i] = '\0';
+		length = i;
 	}
 
 	void AddToStart(char c)
@@ -124,23 +135,20 @@ void ChooseString(); //сама функция ниже
 
 void BaseStringMenu(Base str)
 {
-	cout << "1. Показать строку" << endl;
-	cout << "2. Добавить символ в начало строки" << endl;
-	cout << "3. Добавить символ в конец строки" << endl;
-	cout << "4. Выход" << endl;
 	int choosingVar;
-	cin >> choosingVar;
 	char c;
-	bool loop = true;
 
-	while (loop)
+	do
 	{
-		loop = false;
+		cout << "1. Показать строку" << endl;
+		cout << "2. Добавить символ в начало строки" << endl;
+		cout << "3. Добавить символ в конец строки" << endl;
+		cout << "4. Выход" << endl;
+		cin >> choosingVar;
 		switch (choosingVar)
 		{
 		case 1:
 			str.ShowString();
-			loop = true;
 			break;
 		case 2:
 			cout << "Введите символ: ";
@@ -150,7 +158,6 @@ void BaseStringMenu(Base str)
 			cout << "Результат: ";
 			str.ShowString();
 			cout << "\n";
-			loop = true; 
 			break;
 		case 3:
 			cout << "Введите символ: ";
@@ -160,35 +167,30 @@ void BaseStringMenu(Base str)
 			cout << "Результат: ";
 			str.ShowString();
 			cout << "\n";
-			loop = true;
 			break;
 		case 4:
 			ChooseString();
 			break;
 		}
-		break;
-	}
+	} while (choosingVar != 4);
 }
 
 void IDStringMenu(IDString IDstr)
 {
-	cout << "1. Показать строку" << endl;
-	cout << "2. Добавить символ в начало строки" << endl;
-	cout << "3. Добавить символ в конец строки" << endl;
-	cout << "4. Выход" << endl;
 	int choosingVar;
-	cin >> choosingVar;
 	char c;
-	bool loop = false;
 
-	while (loop == true)
+	do
 	{
-		loop = false;
+		cout << "1. Показать строку" << endl;
+		cout << "2. Добавить символ в начало строки" << endl;
+		cout << "3. Добавить символ в конец строки" << endl;
+		cout << "4. Выход" << endl;
+		cin >> choosingVar;
 		switch (choosingVar)
 		{
 		case 1:
 			IDstr.ShowString();
-			loop = true;
 			break;
 		case 2:
 			cout << "Введите символ: ";
@@ -198,7 +200,6 @@ void IDStringMenu(IDString IDstr)
 			cout << "Результат: ";
 			IDstr.ShowString();
 			cout << "\n";
-			loop = true;
 			break;
 		case 3:
 			cout << "Введите символ: ";
@@ -208,34 +209,30 @@ void IDStringMenu(IDString IDstr)
 			cout << "Результат: ";
 			IDstr.ShowString();
 			cout << "\n";
-			loop = true;
 			break;
 		case 4:
 			ChooseString();
 			break;
 		}
-	}
+	} while (choosingVar != 4);
 }
 
 void BinStringMenu(BinString binStr)
 {
-	cout << "1. Показать строку" << endl;
-	cout << "2. Добавить символ в начало строки" << endl;
-	cout << "3. Добавить символ в конец строки" << endl;
-	cout << "4. Выход" << endl;
 	int choosingVar;
-	cin >> choosingVar;
 	char c;
-	bool loop = true;
 
-	while (loop == true)
+	do
 	{
-		loop = false;
+		cout << "1. Показать строку" << endl;
+		cout << "2. Добавить символ в начало строки" << endl;
+		cout << "3. Добавить символ в конец строки" << endl;
+		cout << "4. Выход" << endl;
+		cin >> choosingVar;
 		switch (choosingVar)
 		{
 		case 1:
 			binStr.ShowString();
-			loop = true;
 			break;
 		case 2:
 			cout << "Введите символ: ";
@@ -245,7 +242,6 @@ void BinStringMenu(BinString binStr)
 			cout << "Результат: ";
 			binStr.ShowString();
 			cout << "\n";
-			loop = true;
 			break;
 		case 3:
 			cout << "Введите символ: ";
@@ -255,59 +251,58 @@ void BinStringMenu(BinString binStr)
 			cout << "Результат: ";
 			binStr.ShowString();
 			cout << "\n";
-			loop = true;
 			break;
 		case 4:
 			ChooseString();
 			break;
 		}
-	}
+	} while (choosingVar != 4);
 }
 
 void ChooseString()
 {
-	cout << "1. Строка" << endl;
-	cout << "2. Строка-идентификатор" << endl;
-	cout << "3. Бинарная строка" << endl;
-	cout << "4. Выход" << endl;
 	int choosingVar;
-	cin >> choosingVar;
-	cout << "Введите строку: ";
-	char content[100];
-	cin >> content;
+	char arr[100];
+	char content[100] = { '0' };
 	Base str(content);
 	BinString binStr(content);
 	IDString IDstr(content);
-
-	bool loop = true;
-
-	while (loop == true)
+	do
 	{
-		loop = false;
+		cout << "1. Строка" << endl;
+		cout << "2. Строка-идентификатор" << endl;
+		cout << "3. Бинарная строка" << endl;
+		cout << "4. Выход" << endl;
+		cin >> choosingVar;
 		switch (choosingVar)
 		{
 		case 1:
+			cout << "Введите строку: ";
+			cin >> arr;
+			str.FillString(arr);
+			
 			BaseStringMenu(str);
-			loop = true;
 			break;
 		case 2:
-			IDStringMenu(IDstr);
-			loop = true;
+			cout << "Введите строку: ";
+			cin >> arr;
+			IDStringMenu(arr);
 			break;
 		case 3:
-			BinStringMenu(binStr);
-			loop = true;
+			cout << "Введите строку: ";
+			cin >> arr;
+			BinStringMenu(arr);
 			break;
 		case 4:
 			return;
 		}
 		return;
-	}
-
+	}while (choosingVar != 4);
 }
 
 int main()
 {
 	setlocale(LC_ALL, "Rus");
 	ChooseString();
+	
 }
