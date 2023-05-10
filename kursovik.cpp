@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -72,12 +73,38 @@ class IDString : public Base
 {
 public:
 	using Base::Base;
+
+	void AddToStart(char c)
+	{
+		for (int i = length; i >= 0; --i)
+		{
+			content[i + 1] = content[i];
+		}
+		content[0] = c;
+		length++;
+	}
 };
 
 class BinString : public Base
 {
 public:
 	using Base::Base;
+
+	void AddToStart(char c)
+	{
+		for (int i = length; i >= 0; --i)
+		{
+			content[i + 1] = content[i];
+		}
+		content[0] = c;
+		length++;
+	}
+
+	void AddToEnd(char c)
+	{
+		content[length] = c;
+		content[++length] = '\0';
+	}
 };
 
 void ChooseString(); //сама функция ниже
@@ -118,7 +145,6 @@ void BaseStringMenu(Base str)
 			cout << "\n";
 			break;
 		case 4:
-			ChooseString();
 			break;
 		}
 	} while (choosingVar != 4);
@@ -145,6 +171,11 @@ void IDStringMenu(IDString IDstr)
 			cout << "Введите символ: ";
 			cin >> c;
 			cout << "\n";
+			if (c < 48 || c > 57)
+			{
+				cout << "Ошибка" << endl;
+				break;
+			}
 			IDstr.AddToStart(c);
 			cout << "Результат: ";
 			IDstr.ShowString();
@@ -160,7 +191,6 @@ void IDStringMenu(IDString IDstr)
 			cout << "\n";
 			break;
 		case 4:
-			ChooseString();
 			break;
 		}
 	} while (choosingVar != 4);
@@ -187,6 +217,11 @@ void BinStringMenu(BinString binStr)
 			cout << "Введите символ: ";
 			cin >> c;
 			cout << "\n";
+			if (c != '1' && c != '0')
+			{
+				cout << "Ошибка" << endl;
+				break;
+			}
 			binStr.AddToStart(c);
 			cout << "Результат: ";
 			binStr.ShowString();
@@ -196,13 +231,17 @@ void BinStringMenu(BinString binStr)
 			cout << "Введите символ: ";
 			cin >> c;
 			cout << "\n";
+			if (c != '1' && c != '0')
+			{
+				cout << "Ошибка" << endl;
+				break;
+			}
 			binStr.AddToEnd(c);
 			cout << "Результат: ";
 			binStr.ShowString();
 			cout << "\n";
 			break;
 		case 4:
-			ChooseString();
 			break;
 		}
 	} while (choosingVar != 4);
@@ -248,21 +287,32 @@ void ChooseString()
 			cout << "Введите строку: ";
 			cin >> arr;
 			binStr.FillString(arr);
-			while (arr[i] == 0 || arr[i] == 1)
+			if (arr[i] != '1' && arr[i] != '0')
 			{
-				if (arr[i] != 0 && arr[i] != 1)
+				cout << "Строка введена неверно" << endl;
+				break;
+			}
+			else
+			{
+				while (arr[i] == '1' || arr[i] == '0')
 				{
+					i++;
+				}
+				if (arr[i] != '1' && arr[i] != '0')
+				{
+					if (arr[i] == '\0')
+					{
+						BinStringMenu(binStr);
+						break;
+					}
 					cout << "Строка введена неверно" << endl;
 					break;
 				}
-				i++;
+				break;
 			}
-			BinStringMenu(binStr);
-			break;
 		case 4:
 			return;
 		}
-		return;
 	} while (choosingVar != 4);
 }
 
