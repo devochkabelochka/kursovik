@@ -1,5 +1,6 @@
 //#include "stdafx.h"
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 
@@ -50,12 +51,6 @@ public:
 		}
 	}
 
-	void AddCharToEnd(char c)
-	{
-		content[length] = c;
-		content[++length] = '\0';
-	}
-
 	void Concat(Base added)
 	{
 		int i = 0;
@@ -64,8 +59,8 @@ public:
 			content[length + i] = added.content[i];
 			i++;
 		}
-		length = i;
-		content[length + i] = '\0';
+		length += i;
+		content[length] = '\0';
 	}
 
 	bool RemoveCharByNumber(int numToDel)
@@ -184,22 +179,16 @@ public:
 		}
 	}
 
-	void AddCharToEnd(char c)
-	{
-		content[length] = c;
-		content[++length] = '\0';
-	}
-
-	void Concat(IDString added)
+	void Concat(char added[])
 	{
 		int i = 0;
-		while (added.content[i] != '\0')
+		while (added[i] != '\0')
 		{
-			content[length + i] = added.content[i];
+			content[length + i] = added[i];
 			i++;
 		}
-		length = i;
-		content[length + i] = '\0';
+		length += i;
+		content[length] = '\0';
 	}
 
 	bool InversionString()
@@ -327,34 +316,82 @@ public:
 			content[length + i] = added.content[i];
 			i++;
 		}
-		length = i;
-		content[length + i] = '\0';
+		length += i;
+		content[length] = '\0';
 	}
 
-	void BitWiseMult(char arr[])
+	void DiffFill(BinString question)
 	{
-		BinString firstMult(content);
-		BinString secondMult(arr);
-		if (firstMult.length > secondMult.length)
+		int diff = this->length - question.length;
+		if (diff < 0)
 		{
-			int diff = firstMult.length - secondMult.length;
-			for (int i = length; i >= 0; --i)
+			for (int i = 0; i < -diff; i++)
 			{
-
+				this->AddToStart('0');
 			}
 		}
+		else if (diff > 0)
+		{
+			for (int i = 0; i < diff; i++)
+			{
+				question.AddToStart('0');
+			}
+		}
+	}
+
+	void BitWiseMult(BinString mult)
+	{
+		this->DiffFill(mult);
+
 		for (int i = 0; i < length; i++)
 		{
-			if (content[i] == '1')
+			if (this->content[i] == '1')
 			{
-				if (arr[i] == '1')
+				if (mult.content[i] == '0')
 				{
-					content[i] = '1';
+					this->content[i] = '0';
 				}
-				else
+			}
+			if (mult.content[i] == '0')
+			{
+				this->content[i] = '0';
+			}
+		}
+	}
+
+	void BitWiseAdd(BinString summ)
+	{
+		this->DiffFill(summ);
+
+		for (int i = 0; i < length; i++)
+		{
+			if (this->content[i] == '0') 
+			{
+				if (summ.content[i] == '1')
 				{
-					content[i] = '0';
+					this->content[i] = '1';
 				}
+			}
+			if (summ.content[i] == '1')
+			{
+				this->content[i] = '1';
+			}
+		}
+	}
+
+	void BitWiseXOR(BinString XOR)
+	{
+		this->DiffFill(XOR);
+
+		for (int i = 0; i < length; i++)
+		{
+			if (this->content[i] != XOR.content[i]) 
+			{
+				this->content[i] = '1';
+			}
+			else
+			{
+				this->content[i] = '0';
 			}
 		}
 	}
@@ -366,11 +403,11 @@ void BaseStringMenu(Base str)
 {
 	int choosingVar;
 	int numToDel;
-	char c[100];
+	char arr[100];
 	do
 	{
 		cout << "1. Показать строку" << endl;
-		cout << "2. Добавить символ в начало строки" << endl;
+		cout << "2. Добавить символ/строку в начало строки" << endl;
 		cout << "3. Добавить символ в конец строки" << endl;
 		cout << "4. Удалить символ строки по номеру" << endl;
 		cout << "5. Удалить последний символ строки" << endl;
@@ -384,10 +421,10 @@ void BaseStringMenu(Base str)
 			break;
 		case 2:
 		{
-			cout << "Введите символ: ";
-			cin >> c;
+			cout << "Введите символ/строку: ";
+			cin >> arr;
 			cout << "\n";
-			Base added(c);
+			Base added(arr);
 			str.AddToStart(added);
 			cout << "Результат: ";
 			str.ShowString();
@@ -396,11 +433,11 @@ void BaseStringMenu(Base str)
 		}
 		case 3:
 		{
-			cout << "Введите символ: ";
-			cin >> c;
+			cout << "Введите символ/строку: ";
+			cin >> arr;
 			cout << "\n";
-			Base added(c);
-			str.AddToEnd(added);
+			Base added(arr);
+			str.Concat(added);
 			cout << "Результат: ";
 			str.ShowString();
 			cout << "\n";
@@ -448,7 +485,7 @@ void IDStringMenu(IDString IDstr)
 {
 	int choosingVar;
 	int numToDel;
-	char c[100];
+	char arr[100];
 	do
 	{
 		cout << "1. Показать строку" << endl;
@@ -467,9 +504,9 @@ void IDStringMenu(IDString IDstr)
 		case 2:
 		{
 			cout << "Введите символ: ";
-			cin >> c;
+			cin >> arr;
 			cout << "\n";
-			IDString added(c);
+			IDString added(arr);
 			IDstr.AddToStart(added);
 			cout << "Результат: ";
 			IDstr.ShowString();
@@ -477,14 +514,16 @@ void IDStringMenu(IDString IDstr)
 			break;
 		}
 		case 3:
+		{
 			cout << "Введите символ: ";
-			cin >> c;
+			cin >> arr;
 			cout << "\n";
-			//IDstr.AddToEnd(c);
+			IDstr.Concat(arr);
 			cout << "Результат: ";
 			IDstr.ShowString();
 			cout << "\n";
 			break;
+		}
 		case 4:
 			cout << "Укажите номер: ";
 			cin >> numToDel;
@@ -533,17 +572,19 @@ void BinStringMenu(BinString binStr)
 	int choosingVar;
 	int numToDel;
 	char arr[100];
-	char c[100];
+	char c;
 	do
 	{
 		cout << "1. Показать строку" << endl;
-		cout << "2. Добавить символ в начало строки" << endl;
-		cout << "3. Добавить символ в конец строки" << endl;
-		cout << "4. Сдвиг влево" << endl;
-		cout << "5. Сдвиг вправо" << endl;
-		cout << "6. Удалить символ по номеру" << endl;
+		cout << "2. Добавить символ/строку в начало строки" << endl;
+		cout << "3. Добавить символ/строку в конец строки" << endl;
+		cout << "4. Удалить символ по номеру" << endl;
+		cout << "5. Сдвиг влево" << endl;
+		cout << "6. Сдвиг вправо" << endl;
 		cout << "7. Побитовое умножение" << endl;
-		cout << "8. Выход" << endl;
+		cout << "8. Побитовое сложение" << endl;
+		cout << "9. Побитовое дополнение(исключающее или)" << endl;
+		cout << "10. Выход" << endl;
 		cin >> choosingVar;
 		switch (choosingVar)
 		{
@@ -552,10 +593,10 @@ void BinStringMenu(BinString binStr)
 			break;
 		case 2:
 		{
-			cout << "Введите символ: ";
-			cin >> c;
+			cout << "Введите символ/строку: ";
+			cin >> arr;
 			cout << "\n";
-			BinString added(c);
+			BinString added(arr);
 			binStr.AddToStart(added);
 			cout << "Результат: ";
 			binStr.ShowString();
@@ -563,33 +604,18 @@ void BinStringMenu(BinString binStr)
 			break;
 		}
 		case 3:
-			cout << "Введите символ: ";
-			cin >> c;
+		{
+			cout << "Введите символ/строку: ";
+			cin >> arr;
 			cout << "\n";
-			//if (binStr.AddToEnd(c));
+			BinString added(arr);
+			binStr.Concat(added);
 			cout << "Результат: ";
 			binStr.ShowString();
 			cout << "\n";
 			break;
+		}
 		case 4:
-			binStr.AddToEnd('0');
-			cout << "Результат: ";
-			binStr.ShowString();
-			cout << "\n";
-			break;
-		case 5:
-			if (binStr.RemoveLast())
-			{
-				cout << "Результат: ";
-				binStr.ShowString();
-				cout << "\n";
-			}
-			else
-			{
-				break;
-			}
-			break;
-		case 6:
 			cout << "Укажите номер: ";
 			cin >> numToDel;
 			cout << '\n';
@@ -604,17 +630,68 @@ void BinStringMenu(BinString binStr)
 				break;
 			}
 			break;
+		case 5:
+			binStr.AddCharToEnd('0');
+			cout << "Результат: ";
+			binStr.ShowString();
+			cout << "\n";
+			break;
+		case 6:
+			if (binStr.RemoveLast())
+			{
+				cout << "Результат: ";
+				binStr.ShowString();
+				cout << "\n";
+			}
+			else
+			{
+				break;
+			}
+			break;
 		case 7:
+		{
 			cout << "Укажите строку-множитель: ";
 			cin >> arr;
 			cout << '\n';
-			binStr.BitWiseMult(arr);
+			BinString mult(arr);
+			cout << "Строка-множитель: ";
+			mult.ShowString();
+			binStr.BitWiseMult(mult);
 			cout << "Результат: ";
 			binStr.ShowString();
 			cout << "\n";
 			break;
 		}
-	} while (choosingVar != 8);
+		case 8:
+		{
+			cout << "Укажите строку-слагамое: ";
+			cin >> arr;
+			cout << '\n';
+			BinString summ(arr);
+			cout << "Строка-слагаемое: ";
+			summ.ShowString();
+			binStr.BitWiseAdd(summ);
+			cout << "Результат: ";
+			binStr.ShowString();
+			cout << "\n";
+			break;
+		}
+		case 9:
+		{
+			cout << "Укажите строку-слагамое: ";
+			cin >> arr;
+			cout << '\n';
+			BinString XOR(arr);
+			cout << "Строка-слагаемое: ";
+			XOR.ShowString();
+			binStr.BitWiseXOR(XOR);
+			cout << "Результат: ";
+			binStr.ShowString();
+			cout << "\n";
+			break;
+		}
+		}
+	} while (choosingVar != 10);
 }
 
 void ChooseString()
