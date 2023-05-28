@@ -244,6 +244,14 @@ public:
 
 class BinString : public Base
 {
+protected:
+	char A[10]; 
+	//если можно оставить content
+	//то надо заменить все названия во всех функциях		
+	//с A на content
+	//и самое важное
+	//изменить ShowString()
+
 public:
 	BinString(char arr[])
 	{
@@ -253,7 +261,7 @@ public:
 		{
 			if (arr[i] == '1' || arr[i] == '0')
 			{
-				content[j] = arr[i];
+				A[j] = arr[i];
 				i++;
 				j++;
 			}
@@ -262,7 +270,7 @@ public:
 				i++;
 			}
 		}
-		content[j] = '\0';
+		A[j] = '\0';
 		length = j;
 	}
 
@@ -270,8 +278,8 @@ public:
 	{
 		if (c == '1' || c == '0')
 		{
-			content[0] = c;
-			content[1] = '\0';
+			A[0] = c;
+			A[1] = '\0';
 			length = 1;
 		}
 		else
@@ -283,7 +291,7 @@ public:
 
 	BinString()
 	{
-		content[0] = '\0';
+		A[0] = '\0';
 		length = 0;
 	}
 
@@ -292,32 +300,75 @@ public:
 		int i;
 		for (i = length; i >= 0; --i)
 		{
-			content[i + added.length] = content[i];
+			A[i + added.length] = A[i];
 		}
 
 		for (i = 0; i < added.length; ++i)
 		{
-			this->content[i] = added.content[i];
+			this->A[i] = added.A[i];
 			length++;
 		}
 	}
 
 	void AddCharToEnd(char c)
 	{
-		content[length] = c;
-		content[++length] = '\0';
+		A[length] = c;
+		A[++length] = '\0';
 	}
 
 	void Concat(BinString added)
 	{
 		int i = 0;
-		while (added.content[i] != '\0')
+		while (added.A[i] != '\0')
 		{
-			content[length + i] = added.content[i];
+			A[length + i] = added.A[i];
 			i++;
 		}
 		length += i;
-		content[length] = '\0';
+		A[length] = '\0';
+	}
+
+	bool ShowByNumber(int numToShow)
+	{
+		if (length == 0)
+		{
+			cout << "Ошибка" << endl;
+			return 0;
+		}
+
+		if (length <= numToShow)
+		{
+			return 0;
+		}
+
+		for (int i = 0; i < length; i++)
+		{
+			if (i == numToShow - 1) 
+			{
+				cout << A[numToShow - 1] << endl;
+				return 1;
+			}
+		}
+	}
+
+	void ChangeString(char arr[])
+	{
+		BinString buffer(arr); 
+		for (int i = 0; i < length; i++)
+		{
+			this->A[i] = buffer.A[i]; 
+		}
+	}
+
+	void ChangeSingle(int numToChange, char c)
+	{
+		for (int i = 0; i < length; i++)
+		{
+			if (i == numToChange - 1) 
+			{
+				A[i] = c;
+			}
+		}
 	}
 
 	void DiffFill(BinString question)
@@ -345,16 +396,16 @@ public:
 
 		for (int i = 0; i < length; i++)
 		{
-			if (this->content[i] == '1')
+			if (this->A[i] == '1')
 			{
-				if (mult.content[i] == '0')
+				if (mult.A[i] == '0')
 				{
-					this->content[i] = '0';
+					this->A[i] = '0';
 				}
 			}
-			if (mult.content[i] == '0')
+			if (mult.A[i] == '0')
 			{
-				this->content[i] = '0';
+				this->A[i] = '0';
 			}
 		}
 	}
@@ -365,16 +416,16 @@ public:
 
 		for (int i = 0; i < length; i++)
 		{
-			if (this->content[i] == '0') 
+			if (this->A[i] == '0') 
 			{
-				if (summ.content[i] == '1')
+				if (summ.A[i] == '1')
 				{
-					this->content[i] = '1';
+					this->A[i] = '1';
 				}
 			}
-			if (summ.content[i] == '1')
+			if (summ.A[i] == '1')
 			{
-				this->content[i] = '1';
+				this->A[i] = '1';
 			}
 		}
 	}
@@ -385,15 +436,20 @@ public:
 
 		for (int i = 0; i < length; i++)
 		{
-			if (this->content[i] != XOR.content[i]) 
+			if (this->A[i] != XOR.A[i]) 
 			{
-				this->content[i] = '1';
+				this->A[i] = '1';
 			}
 			else
 			{
-				this->content[i] = '0';
+				this->A[i] = '0';
 			}
 		}
+	}
+
+	void ShowString()
+	{
+		cout << "content: " << A << ", length: " << length << endl;
 	}
 };
 
@@ -571,6 +627,7 @@ void BinStringMenu(BinString binStr)
 {
 	int choosingVar;
 	int numToDel;
+	int numToShow;
 	char arr[100];
 	char c;
 	do
@@ -584,7 +641,10 @@ void BinStringMenu(BinString binStr)
 		cout << "7. Побитовое умножение" << endl;
 		cout << "8. Побитовое сложение" << endl;
 		cout << "9. Побитовое дополнение(исключающее или)" << endl;
-		cout << "10. Выход" << endl;
+		cout << "10. Показать символ по номеру" << endl;
+		cout << "11. Изменить строку" << endl;
+		cout << "12. Изменить один элменет строки" << endl;
+		cout << "13. Выход" << endl;
 		cin >> choosingVar;
 		switch (choosingVar)
 		{
@@ -690,8 +750,43 @@ void BinStringMenu(BinString binStr)
 			cout << "\n";
 			break;
 		}
+		case 10:
+		{
+			cout << "Какой элемент хочешь посмотреть? ";
+			cin >> numToShow;
+			if (!binStr.ShowByNumber(numToShow));
+			{
+				break;
+			}
+			break;
 		}
-	} while (choosingVar != 10);
+		case 11:
+		{
+			cout << "Введите строку: ";
+			cin >> arr;
+			cout << "\n";
+			binStr.ChangeString(arr);
+			cout << "Результат: ";
+			binStr.ShowString();
+			cout << "\n";
+			break;
+		}
+		case 12:
+		{
+			cout << "Какой элемент нужно заменить? ";
+			cin >> numToShow;
+			cout << endl;
+			cout << "На что заменяем? ";
+			cin >> c;
+			cout << endl;
+			binStr.ChangeSingle(numToShow, c);
+			cout << "Результат: ";
+			binStr.ShowString();
+			cout << "\n";
+			break;
+		}
+		}
+	} while (choosingVar != 12);
 }
 
 void ChooseString()
